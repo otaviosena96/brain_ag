@@ -1,0 +1,22 @@
+
+
+docker-compose up -d
+
+
+cp .env.example .env
+
+
+npx prisma migrate dev
+npm run seed
+
+
+Nota: Se você precisar resetar o banco de dados (por exemplo, durante o desenvolvimento), pode usar o seguinte comando para apagar e recriar o banco com as migrations:
+
+
+npx prisma migrate reset
+
+
+npm install
+
+npm run dev
+

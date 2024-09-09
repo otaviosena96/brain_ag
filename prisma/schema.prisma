@@ -1,0 +1,25 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Producer {
+  id              String @id @default(uuid())
+  cpf_cnpj        String
+  total_area      Float
+  cultivable_area Float
+  vegetation_area Float
+  state           String
+  crops           Crop[] @relation("ProducerCrops")
+}
+
+model Crop {
+  id        String     @id @default(uuid())
+  name      String
+  code      Int        @unique @default(autoincrement())
+  producers Producer[] @relation("ProducerCrops")
+}
