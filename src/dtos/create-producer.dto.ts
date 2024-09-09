@@ -17,7 +17,7 @@ export class CreateProducerDto {
 
   @IsString()
   @IsNotEmpty()
-  propertyName!: string
+  property_name!: string
 
   @IsString()
   @IsNotEmpty()

@@ -9,10 +9,13 @@ generator client {
 
 model Producer {
   id              String @id @default(uuid())
-  cpf_cnpj        String
+  name            String
+  property_name   String
+  cpf_cnpj        String @unique
   total_area      Float
   cultivable_area Float
   vegetation_area Float
+  city            String
   state           String
   crops           Crop[] @relation("ProducerCrops")
 }

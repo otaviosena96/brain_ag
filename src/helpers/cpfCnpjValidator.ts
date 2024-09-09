@@ -11,7 +11,6 @@ export class CpfCnpjValidator {
     return cleanCpf.length === 11 && this.validators.cpf(cleanCpf)
   }
 
-  // Valida CNPJ
   public static validateCnpj(cnpjNumber: string): boolean {
     const cleanCnpj = cnpjNumber.replace(/\D+/g, '')
     return cleanCnpj.length === 14 && this.validators.cnpj(cleanCnpj)

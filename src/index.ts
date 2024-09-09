@@ -1,12 +1,16 @@
 import 'reflect-metadata'
-import express, { Request, Response } from 'express'
+import express from 'express'
+import producersRouter from './modules/producers/infra/producers.routes'
+import dashboardRouter from './modules/dashboard/infra/dashboard.routes'
+import '../src/container/index'
 
 const app = express()
 const port = 3000
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello World!')
-})
+app.use(express.json())
+
+app.use(producersRouter)
+app.use(dashboardRouter)
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`)

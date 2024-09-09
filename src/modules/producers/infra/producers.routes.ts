@@ -1,10 +1,11 @@
-// src/routes/producer.routes.ts
 import { Router } from 'express'
 import ProducerController from './producers.controller'
 
-const router = Router()
+const producersRouter = Router()
 const producerController = new ProducerController()
 
-router.post('/producers', producerController.create)
+producersRouter.post('/producers/create', producerController.create)
+producersRouter.post('/producers/update/:id', producerController.update)
+producersRouter.delete('/producers/:id', producerController.delete)
 
-export default router
+export default producersRouter
