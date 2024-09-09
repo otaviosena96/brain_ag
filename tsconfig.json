@@ -7,10 +7,10 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "./dist",
-    "rootDir": "./", 
+    "rootDir": "./src", 
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts", "index.ts"],
+  "include": ["src/**/*.ts", "src/tests/**/*.ts", "src/index.ts"],
   "exclude": ["node_modules"]
 }

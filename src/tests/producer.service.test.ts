@@ -1,7 +1,7 @@
-import { CreateProducerDto } from '../src/dtos/create-producer.dto'
-import { UpdateProducerDto } from '../src/dtos/update-producer.dto'
-import { createError } from '../src/helpers/createError'
-import { Producer } from '../src/modules/producers/domain/producer.model'
+import { CreateProducerDto } from '../dtos/create-producer.dto'
+import { UpdateProducerDto } from '../dtos/update-producer.dto'
+import { createError } from '../helpers/createError'
+import { Producer } from './mocks/producer.mock'
 import {
   createMockData,
   initializeProducerService,

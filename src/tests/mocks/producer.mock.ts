@@ -1,9 +1,9 @@
 import { Crop } from '@prisma/client'
-import { CreateProducerDto } from '../../src/dtos/create-producer.dto'
-import { UpdateProducerDto } from '../../src/dtos/update-producer.dto'
-import { createError } from '../../src/helpers/createError'
-import { CpfCnpjValidator } from '../../src/helpers/cpfCnpjValidator'
-import { STATE_DICTIONARY } from '../../src/helpers/stateDictionay'
+import { CreateProducerDto } from '../../dtos/create-producer.dto'
+import { UpdateProducerDto } from '../../dtos/update-producer.dto'
+import { createError } from '../../helpers/createError'
+import { CpfCnpjValidator } from '../../helpers/cpfCnpjValidator'
+import { STATE_DICTIONARY } from '../../helpers/stateDictionay'
 
 export class Producer {
   constructor(

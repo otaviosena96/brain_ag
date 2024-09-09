@@ -1,6 +1,6 @@
-import { CreateProducerDto } from '../src/dtos/create-producer.dto'
-import { IProducerRepository } from '../src/modules/producers/domain/producer.repository'
-import { ProducerService } from '../src/modules/producers/services/producers.service'
+import { CreateProducerDto } from '../dtos/create-producer.dto'
+import { IProducerRepository } from '../modules/producers/domain/producer.repository'
+import { ProducerService } from '../modules/producers/services/producers.service'
 
 export const mockProducerRepository: Partial<IProducerRepository> = {
   findById: jest.fn(),

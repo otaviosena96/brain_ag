@@ -1,4 +1,4 @@
-import { IProducerRepository } from '../../src/modules/producers/domain/producer.repository'
+import { IProducerRepository } from '../../modules/producers/domain/producer.repository'
 
 export const mockProducerRepository: Partial<IProducerRepository> = {
   findByCpfOrCnpj: jest.fn(),
