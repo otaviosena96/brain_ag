@@ -7,5 +7,6 @@ const producerController = new ProducerController()
 producersRouter.post('/producers/create', producerController.create)
 producersRouter.post('/producers/update/:id', producerController.update)
 producersRouter.delete('/producers/:id', producerController.delete)
+producersRouter.get('/producers/:id', producerController.getById)
 
 export default producersRouter

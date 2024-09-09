@@ -3,6 +3,7 @@ import { IProducerRepository } from '../domain/producer.repository'
 import { CreateProducerDto } from '../../../dtos/create-producer.dto'
 import { Producer } from '../domain/producer.model'
 import { createError } from '../../../helpers/createError'
+import { UpdateProducerDto } from '../../../dtos/update-producer.dto'
 @injectable()
 export class ProducerService {
   private producerRepository: IProducerRepository
@@ -16,7 +17,7 @@ export class ProducerService {
   async create(data: CreateProducerDto): Promise<Producer> {
     data.state = data.state.trim().toUpperCase()
     data.cpf_cnpj = data.cpf_cnpj.trim().replace(/\D+/g, '')
-    Producer.validation(data)
+    Producer.validateCreate(data)
     const producerExisting = await this.producerRepository.findByCpfOrCnpj(
       data.cpf_cnpj,
     )
@@ -26,28 +27,33 @@ export class ProducerService {
     return this.producerRepository.create(data)
   }
 
-  async update(id: string, data: CreateProducerDto): Promise<Producer> {
-    data.state = data.state.trim().toUpperCase()
-    data.cpf_cnpj = data.cpf_cnpj.trim().replace(/\D+/g, '')
-
-    const producerExistingByCpf = await this.producerRepository.findByCpfOrCnpj(
-      data.cpf_cnpj,
-    )
-    const producerExisting = await this.producerRepository.findById(id)
-    if (producerExisting === null) {
+  async update(id: string, data: UpdateProducerDto): Promise<Producer> {
+    const existingProducer = await this.producerRepository.findById(id)
+    if (!existingProducer) {
       throw createError('Produtor não encontrado.', 404)
     }
-    console.log(producerExisting)
-    console.log(producerExistingByCpf)
-    if (producerExistingByCpf !== null && producerExistingByCpf.id !== id) {
-      console.log('oi')
-      throw createError('CPF ou CNPJ já está cadastrado.', 403)
+
+    if (data.cpf_cnpj) {
+      const producerExistingByCpf =
+        await this.producerRepository.findByCpfOrCnpj(data.cpf_cnpj)
+      if (producerExistingByCpf && producerExistingByCpf.id !== id) {
+        throw createError('CPF ou CNPJ já está cadastrado.', 403)
+      }
+      data.cpf_cnpj = data.cpf_cnpj.trim().replace(/\D+/g, '')
     }
 
-    Producer.validation(data)
+    if (data.state) {
+      data.state = data.state.trim().toUpperCase()
+    }
+
+    Producer.validateUpdate({
+      ...existingProducer,
+      ...data,
+    })
 
     return this.producerRepository.update(id, data)
   }
+
   async delete(id: string): Promise<void> {
     const producerExisting = await this.producerRepository.findById(id)
 
@@ -56,5 +62,15 @@ export class ProducerService {
     }
 
     await this.producerRepository.delete(id)
+  }
+
+  async getById(id: string): Promise<Producer> {
+    const producer = await this.producerRepository.findById(id)
+
+    if (producer === null) {
+      throw createError('Produtor não encontrado.', 404)
+    }
+
+    return producer
   }
 }

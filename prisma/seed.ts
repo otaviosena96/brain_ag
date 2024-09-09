@@ -20,6 +20,24 @@ async function main() {
   }
 
   console.log('Culturas criadas com sucesso!')
+
+  const producer = await prisma.producer.create({
+    data: {
+      id: '9f6d007c-ba29-4bab-918b-164577be38ae',
+      cpf_cnpj: '009.864.471-88',
+      name: 'Otávio Sena',
+      property_name: 'Fazenda do Otávio',
+      city: 'Campo Grande',
+      state: 'MS',
+      total_area: 100.0,
+      cultivable_area: 80.0,
+      vegetation_area: 20.0,
+      crops: {
+        connect: [{ code: 2 }, { code: 3 }],
+      },
+    },
+  })
+  console.log('Produtor criado com sucesso!', producer)
 }
 
 main()

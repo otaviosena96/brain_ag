@@ -3,6 +3,7 @@ import { CreateProducerDto } from '../../../../dtos/create-producer.dto'
 import { IProducerRepository } from '../../domain/producer.repository'
 import { Producer } from '../../domain/producer.model'
 import { injectable } from 'tsyringe'
+import { UpdateProducerDto } from '../../../../dtos/update-producer.dto'
 
 const prisma = new PrismaClient()
 
@@ -18,7 +19,7 @@ export default class ProducerRepository implements IProducerRepository {
       total_area,
       cultivable_area,
       vegetation_area,
-      cropCodes,
+      cropCodes = [],
     } = data
 
     const producer = await prisma.producer.create({
@@ -42,6 +43,7 @@ export default class ProducerRepository implements IProducerRepository {
 
     return producer
   }
+
   async findByCpfOrCnpj(cpf_cnpj: string): Promise<Producer | null> {
     const producer = await prisma.producer.findUnique({
       where: { cpf_cnpj },
@@ -51,6 +53,7 @@ export default class ProducerRepository implements IProducerRepository {
     })
     return producer
   }
+
   async findById(id: string): Promise<Producer | null> {
     const producer = await prisma.producer.findUnique({
       where: { id },
@@ -61,7 +64,7 @@ export default class ProducerRepository implements IProducerRepository {
     return producer
   }
 
-  async update(id: string, data: CreateProducerDto): Promise<Producer> {
+  async update(id: string, data: UpdateProducerDto): Promise<Producer> {
     const {
       cpf_cnpj,
       name,
@@ -71,7 +74,7 @@ export default class ProducerRepository implements IProducerRepository {
       total_area,
       cultivable_area,
       vegetation_area,
-      cropCodes,
+      cropCodes = [],
     } = data
 
     const producer = await prisma.producer.update({
@@ -96,6 +99,7 @@ export default class ProducerRepository implements IProducerRepository {
 
     return producer
   }
+
   async delete(id: string): Promise<void> {
     await prisma.producer.delete({ where: { id } })
   }

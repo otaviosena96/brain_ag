@@ -1,4 +1,5 @@
 import { CreateProducerDto } from '../src/dtos/create-producer.dto'
+import { UpdateProducerDto } from '../src/dtos/update-producer.dto'
 import { createError } from '../src/helpers/createError'
 import { Producer } from '../src/modules/producers/domain/producer.model'
 import {
@@ -16,9 +17,9 @@ describe('ProducerService - Create, Update, and Delete', () => {
   })
 
   it('deve criar um produtor com dados válidos', async () => {
-    const mockData = createMockData()
+    const mockData: CreateProducerDto = createMockData() as CreateProducerDto
 
-    const mockProducer = Producer.validation(mockData)
+    const mockProducer = Producer.fromCreateDto(mockData)
 
     ;(mockProducerRepository.findByCpfOrCnpj as jest.Mock).mockResolvedValue(
       null,
@@ -37,25 +38,26 @@ describe('ProducerService - Create, Update, and Delete', () => {
   })
 
   it('deve atualizar um produtor com dados válidos', async () => {
-    const mockData = createMockData()
+    const mockData: UpdateProducerDto = createMockData() as UpdateProducerDto
 
-    const updatedData: CreateProducerDto = {
+    const updatedData: UpdateProducerDto = {
       ...mockData,
       name: 'Otávio Sena Atualizado',
     }
 
-    const mockProducer = Producer.validation(updatedData)
+    const existingProducer = Producer.fromUpdateDto(mockData)
+    const updatedProducer = Producer.fromUpdateDto(updatedData)
 
     ;(mockProducerRepository.findById as jest.Mock).mockResolvedValue(
-      mockProducer,
+      existingProducer,
     )
     ;(mockProducerRepository.update as jest.Mock).mockResolvedValue(
-      mockProducer,
+      updatedProducer,
     )
 
     const result = await producerService.update('producer-id', updatedData)
 
-    expect(result).toEqual(mockProducer)
+    expect(result).toEqual(updatedProducer)
     expect(mockProducerRepository.findById).toHaveBeenCalledWith('producer-id')
     expect(mockProducerRepository.update).toHaveBeenCalledWith(
       'producer-id',
@@ -64,7 +66,7 @@ describe('ProducerService - Create, Update, and Delete', () => {
   })
 
   it('deve deletar um produtor existente', async () => {
-    const mockProducer = createMockData()
+    const mockProducer = createMockData() as CreateProducerDto
 
     ;(mockProducerRepository.findById as jest.Mock).mockResolvedValue(
       mockProducer,
@@ -97,7 +99,7 @@ describe('ProducerService - Create, Update, and Delete', () => {
   })
 
   it('não deve atualizar produtor se não for encontrado', async () => {
-    const updatedData = createMockData()
+    const updatedData: UpdateProducerDto = createMockData() as UpdateProducerDto
 
     ;(mockProducerRepository.findById as jest.Mock).mockResolvedValue(null)
 

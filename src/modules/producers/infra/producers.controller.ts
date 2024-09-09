@@ -45,4 +45,19 @@ export default class ProducerController {
       })
     }
   }
+
+  async getById(req: Request, res: Response): Promise<void> {
+    try {
+      const { id } = req.params
+
+      const producer = await container.resolve(ProducerService).getById(id)
+      res.status(200).json(producer)
+    } catch (error: any) {
+      const statusCode = error.statusCode || 500
+      res.status(statusCode).json({
+        error: 'Falha ao buscar produtor',
+        message: `${error}`,
+      })
+    }
+  }
 }

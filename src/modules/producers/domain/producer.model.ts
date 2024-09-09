@@ -1,4 +1,5 @@
 import { CreateProducerDto } from '../../../dtos/create-producer.dto'
+import { UpdateProducerDto } from '../../../dtos/update-producer.dto'
 import { CpfCnpjValidator } from '../../../helpers/cpfCnpjValidator'
 import { createError } from '../../../helpers/createError'
 import { STATE_DICTIONARY } from '../../../helpers/stateDictionay'
@@ -18,7 +19,7 @@ export class Producer {
     public crops: Crop[],
   ) {}
 
-  static validate(data: CreateProducerDto): void {
+  static validateCreate(data: CreateProducerDto): void {
     if (data.cultivable_area + data.vegetation_area > data.total_area) {
       throw createError(
         'A soma da área cultivável e da vegetação não pode ser maior que a área total.',
@@ -27,25 +28,58 @@ export class Producer {
     if (!CpfCnpjValidator.validateCpfCnpj(data.cpf_cnpj)) {
       throw createError('CPF/CNPJ inválido.')
     }
-
     if (!STATE_DICTIONARY.has(data.state)) {
       throw createError('Sigla do estado inválida.')
     }
   }
 
-  static validation(data: CreateProducerDto): Producer {
-    this.validate(data)
+  static validateUpdate(data: UpdateProducerDto): void {
+    if (
+      data.cultivable_area !== undefined &&
+      data.vegetation_area !== undefined &&
+      data.total_area !== undefined
+    ) {
+      if (data.cultivable_area + data.vegetation_area > data.total_area) {
+        throw createError(
+          'A soma da área cultivável e da vegetação não pode ser maior que a área total.',
+        )
+      }
+    }
+    if (data.cpf_cnpj && !CpfCnpjValidator.validateCpfCnpj(data.cpf_cnpj)) {
+      throw createError('CPF/CNPJ inválido.')
+    }
+    if (data.state && !STATE_DICTIONARY.has(data.state)) {
+      throw createError('Sigla do estado inválida.')
+    }
+  }
+
+  static fromCreateDto(dto: CreateProducerDto): Producer {
     return new Producer(
-      '',
-      data.cpf_cnpj.trim(),
-      data.name,
-      data.property_name,
-      data.city,
-      data.state,
-      data.total_area,
-      data.cultivable_area,
-      data.vegetation_area,
-      [],
+      '', // ID será gerado em outro lugar
+      dto.cpf_cnpj.trim(),
+      dto.name,
+      dto.property_name,
+      dto.city,
+      dto.state,
+      dto.total_area,
+      dto.cultivable_area,
+      dto.vegetation_area,
+      [], // Default crops as empty
+    )
+  }
+
+  static fromUpdateDto(dto: UpdateProducerDto): Producer {
+    return new Producer(
+      '', // ID será gerado em outro lugar
+      dto.cpf_cnpj?.trim() || '', // Usa valor padrão se cpf_cnpj não estiver presente
+      dto.name || '',
+      dto.property_name || '',
+      dto.city || '',
+      dto.state || '',
+      dto.total_area || 0,
+      dto.cultivable_area || 0,
+      dto.vegetation_area || 0,
+      [], // Default crops as empty
     )
   }
 }
